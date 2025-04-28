@@ -1,0 +1,13 @@
+version: '3.5'
+services:
+  dev:
+    user: root
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - ./:/usr/src/fhirpatientsummary
+    container_name: fhirpatientsummary_dev
+    working_dir: /usr/src/fhirpatientsummary
+    env_file:
+      - docker.env
