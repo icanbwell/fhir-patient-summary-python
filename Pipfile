@@ -10,6 +10,9 @@ url = "https://imranq2.github.io/alpine-wheels/docs/"
 verify_ssl = true
 
 [packages]
+# fhir.resources is a Python library for working with FHIR resources
+# pin fhir.resources to 7.1.0 to avoid breaking changes
+"fhir.resources" = ">=7.1.0, <8"
 
 [dev-packages]
 setuptools=">=60.9.3"
