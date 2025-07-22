@@ -55,7 +55,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/icanbwell/fhir-patient-summary",
     packages=find_packages(),
-    install_requires=["fhir.resources>=7.1.0,<8"],
+    install_requires=["fhir.resources<8,>=7.1.0"],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Programming Language :: Python :: 3",
