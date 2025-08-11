@@ -5,19 +5,11 @@ This test file corresponds to the original narrativeGenerator.test.ts
 """
 
 import pytest
-import sys
-import os
 from typing import List, Dict, Any
 
-# Add the current directory to the Python path
-current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, current_dir)
-
-from python.fhir_patient_summary.generators.narrative_generator import (
-    NarrativeGenerator,
-)
-from python.fhir_patient_summary.structures.ips_sections import IPSSections
-from python.fhir_patient_summary.types.fhir_types import TPatient
+from fhirpatientsummary.generators import NarrativeGenerator
+from fhirpatientsummary.structures import IPSSections
+from fhirpatientsummary.types import TPatient
 
 
 class TestNarrativeGenerator:
@@ -144,7 +136,7 @@ class TestNarrativeGenerator:
         ]
 
     @pytest.mark.asyncio
-    async def test_patient_narrative_generation(self, mock_patient: TPatient):
+    async def test_patient_narrative_generation(self, mock_patient: TPatient) -> None:
         """Test patient narrative generation."""
         narrative = await NarrativeGenerator.generate_narrative_content_async(
             IPSSections.PATIENT, [mock_patient], "America/New_York", True
@@ -159,7 +151,7 @@ class TestNarrativeGenerator:
     @pytest.mark.asyncio
     async def test_allergies_narrative_generation(
         self, mock_allergies: List[Dict[str, Any]]
-    ):
+    ) -> None:
         """Test allergies narrative generation."""
         narrative = await NarrativeGenerator.generate_narrative_content_async(
             IPSSections.ALLERGIES, mock_allergies, "America/New_York", True
@@ -174,7 +166,7 @@ class TestNarrativeGenerator:
     @pytest.mark.asyncio
     async def test_medications_narrative_generation(
         self, mock_medications: List[Dict[str, Any]]
-    ):
+    ) -> None:
         """Test medications narrative generation."""
         narrative = await NarrativeGenerator.generate_narrative_content_async(
             IPSSections.MEDICATIONS, mock_medications, "America/New_York", True
@@ -188,7 +180,7 @@ class TestNarrativeGenerator:
     @pytest.mark.asyncio
     async def test_conditions_narrative_generation(
         self, mock_conditions: List[Dict[str, Any]]
-    ):
+    ) -> None:
         """Test conditions/problems narrative generation."""
         narrative = await NarrativeGenerator.generate_narrative_content_async(
             IPSSections.PROBLEMS, mock_conditions, "America/New_York", True
@@ -202,7 +194,7 @@ class TestNarrativeGenerator:
     @pytest.mark.asyncio
     async def test_immunizations_narrative_generation(
         self, mock_immunizations: List[Dict[str, Any]]
-    ):
+    ) -> None:
         """Test immunizations narrative generation."""
         narrative = await NarrativeGenerator.generate_narrative_content_async(
             IPSSections.IMMUNIZATIONS, mock_immunizations, "America/New_York", True
@@ -216,7 +208,7 @@ class TestNarrativeGenerator:
         assert "2022-10-01" in narrative
 
     @pytest.mark.asyncio
-    async def test_empty_resources_returns_none(self):
+    async def test_empty_resources_returns_none(self) -> None:
         """Test that empty resources return None."""
         narrative = await NarrativeGenerator.generate_narrative_content_async(
             IPSSections.PATIENT, [], "America/New_York", True
@@ -225,7 +217,7 @@ class TestNarrativeGenerator:
         assert narrative is None
 
     @pytest.mark.asyncio
-    async def test_narrative_with_xhtml_wrapping(self, mock_patient: TPatient):
+    async def test_narrative_with_xhtml_wrapping(self, mock_patient: TPatient) -> None:
         """Test narrative generation with XHTML wrapping."""
         narrative = await NarrativeGenerator.generate_narrative_content_async(
             IPSSections.PATIENT,
@@ -238,7 +230,9 @@ class TestNarrativeGenerator:
         assert 'xmlns="http://www.w3.org/1999/xhtml"' in narrative
 
     @pytest.mark.asyncio
-    async def test_narrative_without_xhtml_wrapping(self, mock_patient: TPatient):
+    async def test_narrative_without_xhtml_wrapping(
+        self, mock_patient: TPatient
+    ) -> None:
         """Test narrative generation without XHTML wrapping."""
         narrative = await NarrativeGenerator.generate_narrative_content_async(
             IPSSections.PATIENT,
@@ -251,7 +245,7 @@ class TestNarrativeGenerator:
         assert 'xmlns="http://www.w3.org/1999/xhtml"' not in narrative
 
     @pytest.mark.asyncio
-    async def test_create_narrative_object(self):
+    async def test_create_narrative_object(self) -> None:
         """Test creating a complete narrative object."""
         content = "<p>Test content</p>"
 
@@ -262,7 +256,7 @@ class TestNarrativeGenerator:
         assert "Test content" in narrative.div
 
     @pytest.mark.asyncio
-    async def test_generate_narrative_object(self, mock_patient: TPatient):
+    async def test_generate_narrative_object(self, mock_patient: TPatient) -> None:
         """Test generating a complete narrative object."""
         narrative = await NarrativeGenerator.generate_narrative_async(
             IPSSections.PATIENT, [mock_patient], "America/New_York", True, True
@@ -274,7 +268,7 @@ class TestNarrativeGenerator:
         assert "John Doe" in narrative.div
 
     @pytest.mark.asyncio
-    async def test_html_minification(self):
+    async def test_html_minification(self) -> None:
         """Test HTML minification functionality."""
         html = """
         <div>
@@ -292,7 +286,7 @@ class TestNarrativeGenerator:
         assert len(minified) <= len(html)  # Should be smaller or equal
 
     @pytest.mark.asyncio
-    async def test_aggressive_html_minification(self):
+    async def test_aggressive_html_minification(self) -> None:
         """Test aggressive HTML minification functionality."""
         html = """
         <div>
@@ -310,7 +304,7 @@ class TestNarrativeGenerator:
         assert len(minified) <= len(html)  # Should be smaller or equal
 
     @pytest.mark.asyncio
-    async def test_wrap_in_xhtml(self):
+    async def test_wrap_in_xhtml(self) -> None:
         """Test XHTML wrapping functionality."""
         content = "<p>Test content</p>"
 
@@ -322,7 +316,7 @@ class TestNarrativeGenerator:
         )
 
     @pytest.mark.asyncio
-    async def test_wrap_in_xhtml_with_minification(self):
+    async def test_wrap_in_xhtml_with_minification(self) -> None:
         """Test XHTML wrapping with minification."""
         content = """
         <p>  Test content  </p>
@@ -338,7 +332,7 @@ class TestNarrativeGenerator:
         assert len(wrapped) < len(content) + 100  # Should be minified
 
     @pytest.mark.asyncio
-    async def test_timezone_parameter(self, mock_patient: TPatient):
+    async def test_timezone_parameter(self, mock_patient: TPatient) -> None:
         """Test that timezone parameter is accepted (even if not used in basic implementation)."""
         narrative_ny = await NarrativeGenerator.generate_narrative_content_async(
             IPSSections.PATIENT, [mock_patient], "America/New_York", True

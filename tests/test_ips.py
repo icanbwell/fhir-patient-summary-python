@@ -5,36 +5,30 @@ This test file corresponds to the original ips.test.ts
 """
 
 import pytest
-import sys
-import os
 import time
 from typing import List
 
-# Add the current directory to the Python path
-current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, current_dir)
-
-from python.fhir_patient_summary.profiles.ips_resource_profile_registry import (
+from fhirpatientsummary.profiles.ips_resource_profile_registry import (
     IPSResourceProfileRegistry,
 )
-from python.fhir_patient_summary.structures.ips_mandatory_sections import (
+from fhirpatientsummary.structures.ips_mandatory_sections import (
     IPSMandatorySections,
 )
-from python.fhir_patient_summary.generators.fhir_summary_generator import (
+from fhirpatientsummary.generators.fhir_summary_generator import (
     ComprehensiveIPSCompositionBuilder,
 )
-from python.fhir_patient_summary.generators.narrative_generator import (
+from fhirpatientsummary.generators.narrative_generator import (
     NarrativeGenerator,
 )
-from python.fhir_patient_summary.types.fhir_types import (
+from fhirpatientsummary.structures.ips_sections import IPSSections
+from fhirpatientsummary.types import (
     TPatient,
     TAllergyIntolerance,
-    TMedicationStatement,
     TCondition,
     TImmunization,
+    TMedicationStatement,
     TObservation,
 )
-from python.fhir_patient_summary.structures.ips_sections import IPSSections
 
 
 class TestInternationalPatientSummary:
@@ -222,7 +216,9 @@ class TestInternationalPatientSummary:
         ]
 
     # Resource Profile Validation Tests
-    def test_patient_resource_should_pass_validation(self, mock_patient: TPatient):
+    def test_patient_resource_should_pass_validation(
+        self, mock_patient: TPatient
+    ) -> None:
         """Test patient resource validation."""
         is_valid = IPSResourceProfileRegistry.validate_resource(
             mock_patient, IPSMandatorySections.PATIENT
@@ -231,7 +227,7 @@ class TestInternationalPatientSummary:
 
     def test_allergy_resource_should_pass_validation(
         self, mock_allergies: List[TAllergyIntolerance]
-    ):
+    ) -> None:
         """Test allergy resource validation."""
         is_valid = IPSResourceProfileRegistry.validate_resource(
             mock_allergies[0], IPSMandatorySections.ALLERGIES
@@ -240,7 +236,7 @@ class TestInternationalPatientSummary:
 
     def test_medication_resource_should_pass_validation(
         self, mock_medications: List[TMedicationStatement]
-    ):
+    ) -> None:
         """Test medication resource validation."""
         is_valid = IPSResourceProfileRegistry.validate_resource(
             mock_medications[0], IPSMandatorySections.MEDICATIONS
@@ -249,7 +245,7 @@ class TestInternationalPatientSummary:
 
     def test_condition_resource_should_pass_validation(
         self, mock_conditions: List[TCondition]
-    ):
+    ) -> None:
         """Test condition resource validation."""
         is_valid = IPSResourceProfileRegistry.validate_resource(
             mock_conditions[0], IPSMandatorySections.PROBLEMS
@@ -258,7 +254,7 @@ class TestInternationalPatientSummary:
 
     def test_immunization_resource_should_pass_validation(
         self, mock_immunizations: List[TImmunization]
-    ):
+    ) -> None:
         """Test immunization resource validation."""
         is_valid = IPSResourceProfileRegistry.validate_resource(
             mock_immunizations[0], IPSMandatorySections.IMMUNIZATIONS
@@ -267,7 +263,9 @@ class TestInternationalPatientSummary:
 
     # Narrative Generation Tests
     @pytest.mark.asyncio
-    async def test_patient_narrative_should_be_generated(self, mock_patient: TPatient):
+    async def test_patient_narrative_should_be_generated(
+        self, mock_patient: TPatient
+    ) -> None:
         """Test patient narrative generation."""
         narrative = await NarrativeGenerator.generate_narrative_async(
             IPSSections.PATIENT, [mock_patient], "America/New_York"
@@ -282,7 +280,7 @@ class TestInternationalPatientSummary:
     @pytest.mark.asyncio
     async def test_allergy_narrative_should_be_generated(
         self, mock_allergies: List[TAllergyIntolerance]
-    ):
+    ) -> None:
         """Test allergy narrative generation."""
         narrative = await NarrativeGenerator.generate_narrative_async(
             IPSSections.ALLERGIES, [mock_allergies[0]], "America/New_York"
@@ -301,7 +299,7 @@ class TestInternationalPatientSummary:
         mock_medications: List[TMedicationStatement],
         mock_conditions: List[TCondition],
         mock_immunizations: List[TImmunization],
-    ):
+    ) -> None:
         """Test creating composition with all mandatory sections."""
         ips_builder = ComprehensiveIPSCompositionBuilder().set_patient(mock_patient)
         timezone = "America/New_York"
@@ -327,7 +325,7 @@ class TestInternationalPatientSummary:
 
     def test_should_throw_error_if_mandatory_sections_are_missing(
         self, mock_patient: TPatient
-    ):
+    ) -> None:
         """Test error when mandatory sections are missing."""
         ips_builder = ComprehensiveIPSCompositionBuilder().set_patient(mock_patient)
 
@@ -343,7 +341,7 @@ class TestInternationalPatientSummary:
         mock_conditions: List[TCondition],
         mock_immunizations: List[TImmunization],
         mock_laboratory_results: List[TObservation],
-    ):
+    ) -> None:
         """Test support for optional sections."""
         ips_builder = ComprehensiveIPSCompositionBuilder().set_patient(mock_patient)
         timezone = "America/New_York"
@@ -371,7 +369,7 @@ class TestInternationalPatientSummary:
         assert composition is not None
 
     # Error Handling Tests
-    def test_should_reject_invalid_patient_resource(self):
+    def test_should_reject_invalid_patient_resource(self) -> None:
         """Test rejection of invalid allergy resource (since Patient has no mandatory fields)."""
         invalid_allergy = {
             "resourceType": "AllergyIntolerance"
@@ -386,7 +384,7 @@ class TestInternationalPatientSummary:
         # Should fail validation due to missing mandatory 'patient' field
         assert is_valid is False
 
-    def test_should_handle_resources_with_missing_mandatory_fields(self):
+    def test_should_handle_resources_with_missing_mandatory_fields(self) -> None:
         """Test handling of resources with missing mandatory fields."""
         incomplete_allergy = {
             "resourceType": "AllergyIntolerance"
@@ -407,7 +405,7 @@ class TestInternationalPatientSummary:
         mock_allergies: List[TAllergyIntolerance],
         mock_conditions: List[TCondition],
         mock_immunizations: List[TImmunization],
-    ):
+    ) -> None:
         """Test handling multiple resources efficiently."""
         # Generate a large number of medication resources
         large_medication_list: List[TMedicationStatement] = [
@@ -448,8 +446,3 @@ class TestInternationalPatientSummary:
 
         assert composition is not None
         assert (end - start) < 1.0  # Should complete within 1 second
-
-
-# Add fixture to all test classes
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])

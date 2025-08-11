@@ -10,8 +10,8 @@ from .ips_sections import IPSSections
 class IPSMandatorySections:
     """IPS mandatory sections constants."""
 
-    PATIENT = IPSSections.PATIENT
-    ALLERGIES = IPSSections.ALLERGIES
-    MEDICATIONS = IPSSections.MEDICATIONS
-    PROBLEMS = IPSSections.PROBLEMS
-    IMMUNIZATIONS = IPSSections.IMMUNIZATIONS
+    PATIENT: str = IPSSections.PATIENT
+    ALLERGIES: str = IPSSections.ALLERGIES
+    MEDICATIONS: str = IPSSections.MEDICATIONS
+    PROBLEMS: str = IPSSections.PROBLEMS
+    IMMUNIZATIONS: str = IPSSections.IMMUNIZATIONS

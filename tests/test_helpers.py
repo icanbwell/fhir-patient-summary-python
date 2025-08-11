@@ -6,9 +6,9 @@ This module corresponds to the original testHelpers.ts
 
 import os
 import re
-from typing import Optional, List
+from typing import Optional, List, cast
 from bs4 import BeautifulSoup
-from python.fhir_patient_summary.types.fhir_types import (
+from fhirpatientsummary.types.fhir_types import (
     TBundle,
     TComposition,
     TCompositionSection,
@@ -40,7 +40,7 @@ def beautify_html(html: str) -> str:
 
         # Use BeautifulSoup to format the HTML
         soup = BeautifulSoup(preprocessed_html, "html.parser")
-        return soup.prettify(indent=4)
+        return cast(str, soup.prettify(indent=4))
 
     except Exception as error:
         print(f"Formatting Error: {error}")

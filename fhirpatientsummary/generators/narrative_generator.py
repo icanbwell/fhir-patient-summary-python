@@ -5,7 +5,7 @@ Generates narrative content for FHIR resources using Python templates.
 Replaces the TypeScript-based narrative generator.
 """
 
-from typing import List, Optional
+from typing import List, Optional, cast
 from dataclasses import dataclass
 import minify_html
 from ..types.fhir_types import TDomainResource
@@ -117,7 +117,7 @@ class NarrativeGenerator:
                 if aggressive
                 else NarrativeGenerator.DEFAULT_MINIFY_OPTIONS
             )
-            return minify_html.minify(html, **options)
+            return cast(str, minify_html.minify(html, **options))
         except Exception as error:
             print(f"HTML minification failed: {error}")
             return html

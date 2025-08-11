@@ -5,15 +5,10 @@ Maps IPS sections to their corresponding Python template classes.
 Replaces the TypeScript template mapping system.
 """
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
-# Import from the correct path
-import sys
-import os
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../.."))
-
-from python.fhir_patient_summary.structures.ips_sections import IPSSections
+from fhirpatientsummary.structures import IPSSections
+from fhirpatientsummary.types.fhir_types import TResource
 
 
 class PythonTemplateMapper:
@@ -63,7 +58,7 @@ class PythonTemplateMapper:
             return PythonTemplateMapper._generate_generic_narrative(section, resources)
 
     @staticmethod
-    def _generate_patient_narrative(resources: list) -> str:
+    def _generate_patient_narrative(resources: list[TResource]) -> str:
         """Generate patient narrative."""
         html_parts = ["<h2>Patient Summary</h2>"]
 
@@ -117,7 +112,7 @@ class PythonTemplateMapper:
         return "\n".join(html_parts)
 
     @staticmethod
-    def _generate_allergies_narrative(resources: list) -> str:
+    def _generate_allergies_narrative(resources: List[TResource]) -> str:
         """Generate allergies narrative."""
         html_parts = ["<h3>Allergies and Adverse Reactions</h3>"]
 
@@ -149,7 +144,7 @@ class PythonTemplateMapper:
         return "\n".join(html_parts)
 
     @staticmethod
-    def _generate_medications_narrative(resources: list) -> str:
+    def _generate_medications_narrative(resources: List[TResource]) -> str:
         """Generate medications narrative."""
         html_parts = ["<h3>Medications</h3>"]
 
@@ -177,7 +172,7 @@ class PythonTemplateMapper:
         return "\n".join(html_parts)
 
     @staticmethod
-    def _generate_problems_narrative(resources: list) -> str:
+    def _generate_problems_narrative(resources: List[TResource]) -> str:
         """Generate problems narrative."""
         html_parts = ["<h3>Problems</h3>"]
 
@@ -203,7 +198,7 @@ class PythonTemplateMapper:
         return "\n".join(html_parts)
 
     @staticmethod
-    def _generate_immunizations_narrative(resources: list) -> str:
+    def _generate_immunizations_narrative(resources: List[TResource]) -> str:
         """Generate immunizations narrative."""
         html_parts = ["<h3>Immunizations</h3>"]
 
@@ -235,7 +230,9 @@ class PythonTemplateMapper:
         return "\n".join(html_parts)
 
     @staticmethod
-    def _generate_generic_narrative(section: IPSSections, resources: list) -> str:
+    def _generate_generic_narrative(
+        section: IPSSections, resources: List[TResource]
+    ) -> str:
         """Generate generic narrative for other sections."""
         section_name = section.value.replace("Section", "").replace("_", " ").title()
         html_parts = [f"<h3>{section_name}</h3>"]

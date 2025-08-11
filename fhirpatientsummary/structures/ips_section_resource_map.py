@@ -6,10 +6,10 @@ Maps IPS sections to FHIR resource types and provides filtering functions.
 
 from typing import List, Dict, Optional, Callable, Any
 from .ips_sections import IPSSections
-
+from ..types.fhir_types import TResource
 
 # Mapping of IPSSections to FHIR resource types
-IPS_SECTION_RESOURCE_MAP: Dict[IPSSections, List[str]] = {
+IPS_SECTION_RESOURCE_MAP: Dict[str, List[str]] = {
     IPSSections.PATIENT: ["Patient"],
     IPSSections.ALLERGIES: ["AllergyIntolerance"],
     IPSSections.MEDICATIONS: ["MedicationRequest", "MedicationStatement"],
@@ -43,7 +43,7 @@ IPS_SECTION_RESOURCE_MAP: Dict[IPSSections, List[str]] = {
 IPSSectionResourceFilter = Callable[[Any], bool]
 
 
-def _allergy_filter(resource: Any) -> bool:
+def _allergy_filter(resource: TResource) -> bool:
     """Only include active allergies."""
     return (
         resource.get("resourceType") == "AllergyIntolerance"
@@ -52,7 +52,7 @@ def _allergy_filter(resource: Any) -> bool:
     )
 
 
-def _medication_filter(resource: Any) -> bool:
+def _medication_filter(resource: TResource) -> bool:
     """Only include active medication requests/statements."""
     resource_type = resource.get("resourceType")
     status = resource.get("status")
@@ -61,7 +61,7 @@ def _medication_filter(resource: Any) -> bool:
     )
 
 
-def _problem_filter(resource: Any) -> bool:
+def _problem_filter(resource: TResource) -> bool:
     """Only include active problems/conditions."""
     return (
         resource.get("resourceType") == "Condition"
@@ -70,7 +70,7 @@ def _problem_filter(resource: Any) -> bool:
     )
 
 
-def _immunization_filter(resource: Any) -> bool:
+def _immunization_filter(resource: TResource) -> bool:
     """Only include completed immunizations."""
     return (
         resource.get("resourceType") == "Immunization"
@@ -78,7 +78,7 @@ def _immunization_filter(resource: Any) -> bool:
     )
 
 
-def _vital_signs_filter(resource: Any) -> bool:
+def _vital_signs_filter(resource: TResource) -> bool:
     """Only include vital sign Observations (category.coding contains 'vital-signs')."""
     if resource.get("resourceType") != "Observation":
         return False
@@ -89,14 +89,14 @@ def _vital_signs_filter(resource: Any) -> bool:
     )
 
 
-def _medical_devices_filter(resource: Any) -> bool:
+def _medical_devices_filter(resource: TResource) -> bool:
     """Only include active devices."""
     return (
         resource.get("resourceType") == "Device" and resource.get("status") == "active"
     )
 
 
-def _diagnostic_reports_filter(resource: Any) -> bool:
+def _diagnostic_reports_filter(resource: TResource) -> bool:
     """Only include finalized diagnostic reports."""
     return (
         resource.get("resourceType") in ["DiagnosticReport", "Observation"]
@@ -104,7 +104,7 @@ def _diagnostic_reports_filter(resource: Any) -> bool:
     )
 
 
-def _procedures_filter(resource: Any) -> bool:
+def _procedures_filter(resource: TResource) -> bool:
     """Only include completed procedures."""
     return (
         resource.get("resourceType") == "Procedure"
@@ -112,12 +112,12 @@ def _procedures_filter(resource: Any) -> bool:
     )
 
 
-def _family_history_filter(resource: Any) -> bool:
+def _family_history_filter(resource: TResource) -> bool:
     """Only include family history resources."""
     return resource.get("resourceType") == "FamilyMemberHistory"
 
 
-def _social_history_filter(resource: Any) -> bool:
+def _social_history_filter(resource: TResource) -> bool:
     """Only include social history Observations (category.coding contains 'social-history')."""
     if resource.get("resourceType") != "Observation":
         return False
@@ -128,7 +128,7 @@ def _social_history_filter(resource: Any) -> bool:
     )
 
 
-def _pregnancy_history_filter(resource: Any) -> bool:
+def _pregnancy_history_filter(resource: TResource) -> bool:
     """Only include pregnancy history Observations (category.coding contains 'pregnancy')."""
     if resource.get("resourceType") != "Observation":
         return False
@@ -139,7 +139,7 @@ def _pregnancy_history_filter(resource: Any) -> bool:
     )
 
 
-def _functional_status_filter(resource: Any) -> bool:
+def _functional_status_filter(resource: TResource) -> bool:
     """Only include functional status Observations (category.coding contains 'functional-status')."""
     if resource.get("resourceType") != "Observation":
         return False
@@ -153,7 +153,7 @@ def _functional_status_filter(resource: Any) -> bool:
     )
 
 
-def _medical_history_filter(resource: Any) -> bool:
+def _medical_history_filter(resource: TResource) -> bool:
     """Only include active medical history Conditions."""
     return (
         resource.get("resourceType") == "Condition"
@@ -162,7 +162,7 @@ def _medical_history_filter(resource: Any) -> bool:
     )
 
 
-def _care_plan_filter(resource: Any) -> bool:
+def _care_plan_filter(resource: TResource) -> bool:
     """Only include active care plans."""
     return (
         resource.get("resourceType") == "CarePlan"
@@ -170,18 +170,18 @@ def _care_plan_filter(resource: Any) -> bool:
     )
 
 
-def _clinical_impression_filter(resource: Any) -> bool:
+def _clinical_impression_filter(resource: TResource) -> bool:
     """Only include ClinicalImpression resources."""
     return resource.get("resourceType") == "ClinicalImpression"
 
 
-def _patient_filter(resource: Any) -> bool:
+def _patient_filter(resource: TResource) -> bool:
     """Patient section: only Patient resource."""
     return resource.get("resourceType") == "Patient"
 
 
 # Optionally, define custom filter functions for each section
-IPS_SECTION_RESOURCE_FILTERS: Dict[IPSSections, IPSSectionResourceFilter] = {
+IPS_SECTION_RESOURCE_FILTERS: Dict[str, IPSSectionResourceFilter] = {
     IPSSections.ALLERGIES: _allergy_filter,
     IPSSections.MEDICATIONS: _medication_filter,
     IPSSections.PROBLEMS: _problem_filter,

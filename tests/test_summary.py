@@ -9,18 +9,13 @@ import sys
 import os
 from typing import List, Dict, Any
 
+from fhirpatientsummary.generators import ComprehensiveIPSCompositionBuilder
+from fhirpatientsummary.structures import IPSSections, IPS_SECTION_LOINC_CODES
+from fhirpatientsummary.types import TPatient
+
 # Add the current directory to the Python path
 current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, current_dir)
-
-from python.fhir_patient_summary.generators.fhir_summary_generator import (
-    ComprehensiveIPSCompositionBuilder,
-)
-from python.fhir_patient_summary.structures.ips_sections import IPSSections
-from python.fhir_patient_summary.structures.ips_section_loinc_codes import (
-    IPS_SECTION_LOINC_CODES,
-)
-from python.fhir_patient_summary.types.fhir_types import TPatient
 
 
 class TestComprehensiveIPSCompositionBuilder:
@@ -327,13 +322,13 @@ class TestComprehensiveIPSCompositionBuilder:
             },
         ]
 
-    def test_constructor(self, mock_patient: TPatient):
+    def test_constructor(self, mock_patient: TPatient) -> None:
         """Test that an instance can be created with a valid patient."""
         builder = ComprehensiveIPSCompositionBuilder().set_patient(mock_patient)
         assert builder is not None
         assert builder.patient == mock_patient
 
-    def test_invalid_patient_throws_error(self):
+    def test_invalid_patient_throws_error(self) -> None:
         """Test that an error is thrown if patient resource is invalid."""
         with pytest.raises(ValueError, match="Invalid Patient resource"):
             ComprehensiveIPSCompositionBuilder().set_patient(None)
@@ -346,7 +341,7 @@ class TestComprehensiveIPSCompositionBuilder:
     @pytest.mark.asyncio
     async def test_add_section(
         self, mock_patient: TPatient, mock_allergies: List[Dict[str, Any]]
-    ):
+    ) -> None:
         """Test that a section can be added with valid resources."""
         builder = ComprehensiveIPSCompositionBuilder().set_patient(mock_patient)
 
@@ -356,7 +351,7 @@ class TestComprehensiveIPSCompositionBuilder:
 
         assert result == builder
 
-    def test_build_missing_mandatory_sections(self, mock_patient: TPatient):
+    def test_build_missing_mandatory_sections(self, mock_patient: TPatient) -> None:
         """Test that build throws an error when mandatory sections are missing."""
         builder = ComprehensiveIPSCompositionBuilder().set_patient(mock_patient)
 
@@ -372,7 +367,7 @@ class TestComprehensiveIPSCompositionBuilder:
         mock_medications: List[Dict[str, Any]],
         mock_conditions: List[Dict[str, Any]],
         mock_immunizations: List[Dict[str, Any]],
-    ):
+    ) -> None:
         """Test building a composition with all mandatory sections."""
         timezone = "America/New_York"
         builder = ComprehensiveIPSCompositionBuilder().set_patient(mock_patient)
@@ -401,7 +396,7 @@ class TestComprehensiveIPSCompositionBuilder:
     @pytest.mark.asyncio
     async def test_missing_mandatory_sections_throws_error(
         self, mock_patient: TPatient, mock_allergies: List[Dict[str, Any]]
-    ):
+    ) -> None:
         """Test that missing mandatory sections throws an error."""
         timezone = "America/New_York"
         builder = ComprehensiveIPSCompositionBuilder().set_patient(mock_patient)
@@ -420,7 +415,7 @@ class TestComprehensiveIPSCompositionBuilder:
         mock_medications: List[Dict[str, Any]],
         mock_conditions: List[Dict[str, Any]],
         mock_immunizations: List[Dict[str, Any]],
-    ):
+    ) -> None:
         """Test creating a complete IPS composition."""
         timezone = "America/New_York"
         builder = ComprehensiveIPSCompositionBuilder().set_patient(mock_patient)
@@ -451,7 +446,7 @@ class TestComprehensiveIPSCompositionBuilder:
         mock_medications: List[Dict[str, Any]],
         mock_conditions: List[Dict[str, Any]],
         mock_immunizations: List[Dict[str, Any]],
-    ):
+    ) -> None:
         """Test creating a complete IPS composition bundle."""
         timezone = "America/New_York"
         builder = ComprehensiveIPSCompositionBuilder().set_patient(mock_patient)
@@ -542,7 +537,3 @@ class TestComprehensiveIPSCompositionBuilder:
         for entry in bundle["entry"][1:]:  # Skip composition
             resource = entry["resource"]
             assert "resourceType" in resource
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-v"])

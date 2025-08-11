@@ -84,16 +84,6 @@ class Identifier:
 
 
 @dataclass
-class Reference:
-    """FHIR Reference element."""
-
-    reference: Optional[str] = None
-    type: Optional[Uri] = None
-    identifier: Optional[Identifier] = None
-    display: Optional[str] = None
-
-
-@dataclass
 class Narrative:
     """FHIR Narrative element."""
 
@@ -130,31 +120,31 @@ class BundleEntry:
 
 
 # Simple resource creation functions
-def create_patient(**kwargs) -> TPatient:
+def create_patient(**kwargs: Any) -> TPatient:
     """Create a Patient resource dictionary."""
     patient = {"resourceType": "Patient", **kwargs}
     return patient
 
 
-def create_composition(**kwargs) -> TComposition:
+def create_composition(**kwargs: Any) -> TComposition:
     """Create a Composition resource dictionary."""
     composition = {"resourceType": "Composition", **kwargs}
     return composition
 
 
-def create_bundle(**kwargs) -> TBundle:
+def create_bundle(**kwargs: Any) -> TBundle:
     """Create a Bundle resource dictionary."""
     bundle = {"resourceType": "Bundle", "entry": [], **kwargs}
     return bundle
 
 
-def create_organization(**kwargs) -> TOrganization:
+def create_organization(**kwargs: Any) -> TOrganization:
     """Create an Organization resource dictionary."""
     organization = {"resourceType": "Organization", **kwargs}
     return organization
 
 
-def create_bundle_entry(**kwargs) -> TBundleEntry:
+def create_bundle_entry(**kwargs: Any) -> TBundleEntry:
     """Create a Bundle entry dictionary."""
     return kwargs
 

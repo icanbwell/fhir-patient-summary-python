@@ -5,7 +5,7 @@ Python implementation of the FHIR International Patient Summary generator.
 Converted from TypeScript.
 """
 
-from typing import Dict, List, Optional, Set, Any
+from typing import Dict, List, Optional, Set, Any, cast
 from datetime import datetime
 from ..types.fhir_types import (
     TPatient,
@@ -32,7 +32,7 @@ class ComprehensiveIPSCompositionBuilder:
     from FHIR resources, including narrative generation and validation.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.patient: Optional[TPatient] = None
         self.sections: List[TCompositionSection] = []
         self.mandatory_sections_added: Set[IPSSections] = set()
@@ -405,7 +405,7 @@ class ComprehensiveIPSCompositionBuilder:
     def _resource_to_dict(self, resource: TDomainResource) -> Dict[str, Any]:
         """Convert resource object to dictionary for filtering."""
         if hasattr(resource, "__dict__"):
-            return resource.__dict__
+            return cast(Dict[str, Any], resource.__dict__)
         return resource if isinstance(resource, dict) else {}
 
     def _dict_to_resource(self, resource_dict: Dict[str, Any]) -> TDomainResource:

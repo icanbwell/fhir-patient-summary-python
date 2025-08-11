@@ -4,7 +4,7 @@ IPS Resource Profile Registry.
 This module corresponds to the original ips_resource_profile_registry.ts
 """
 
-from typing import Dict
+from typing import Dict, Literal
 from ..structures.ips_resource_profile import IPSResourceProfile
 from ..structures.ips_mandatory_sections import IPSMandatorySections
 from ..structures.ips_recommended_sections import IPSRecommendedSections
@@ -125,7 +125,9 @@ class IPSResourceProfileRegistry:
     }
 
     @classmethod
-    def validate_resource(cls, resource: TDomainResource, profile_type: str) -> bool:
+    def validate_resource(
+        cls, resource: TDomainResource, profile_type: str | Literal[str]
+    ) -> bool:
         """
         Validate resource against IPS profile.
 

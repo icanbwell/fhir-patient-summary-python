@@ -4,14 +4,12 @@ IPS Sections Enumeration
 Defines all possible International Patient Summary section types.
 """
 
-from enum import Enum
 
-
-class IPSSections(Enum):
+class IPSSections:
     """Enum for all possible IPS sections."""
 
     # Mandatory Sections
-    PATIENT = "Patient"
+    PATIENT: str = "Patient"
     ALLERGIES = "AllergyIntoleranceSection"
     MEDICATIONS = "MedicationSection"
     PROBLEMS = "ProblemSection"

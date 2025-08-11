@@ -10,9 +10,9 @@ from .ips_sections import IPSSections
 class IPSRecommendedSections:
     """IPS recommended sections constants."""
 
-    MEDICAL_DEVICES = "Device"
-    PREGNANCY_STATUS = "PregnancyStatus"
-    FUNCTIONAL_STATUS = "FunctionalStatus"
-    ADVANCED_DIRECTIVES = "Consent"
-    DIAGNOSTIC_REPORTS = IPSSections.DIAGNOSTIC_REPORTS
-    VITAL_SIGNS = IPSSections.VITAL_SIGNS
+    MEDICAL_DEVICES: str = "Device"
+    PREGNANCY_STATUS: str = "PregnancyStatus"
+    FUNCTIONAL_STATUS: str = "FunctionalStatus"
+    ADVANCED_DIRECTIVES: str = "Consent"
+    DIAGNOSTIC_REPORTS: str = IPSSections.DIAGNOSTIC_REPORTS
+    VITAL_SIGNS: str = IPSSections.VITAL_SIGNS
